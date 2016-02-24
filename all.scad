@@ -20,12 +20,36 @@ module all() {
 	translate([-0.75, 5.25, 0]) rook();
 }
 
+
+LIGHT = [0.8,0.8,0.8];
+DARK = [0.6,0.6,0.6];
+SQUARE_SIZE = 1.5;
+SQUARE_THICKNESS = 0.2;
+NUM_SQUARES_BY_SIDE = 8;
+
+function half(num) =  num/2;
+
+module square(color) {
+    color(color) 
+        cube([SQUARE_SIZE, SQUARE_SIZE, SQUARE_THICKNESS] ,center=true);
+}
+
+module square_board(x, y) {
+    if((x+y)%2 == 1) square(LIGHT); 
+	else square(DARK);
+}
+
+function left_corner() = -half(NUM_SQUARES_BY_SIDE)*SQUARE_SIZE;
+function next_center(pos) = pos*SQUARE_SIZE;
+function left_corner_center() = left_corner()+half(SQUARE_SIZE);
+function square_center(pos) = left_corner_center()+next_center(pos);
+function square_height() = -half(SQUARE_THICKNESS);
+
 module board() {
-	for(i = [0:7]) {
-		for(j = [0:7]) {
-			translate([-5.25+i*1.5,-5.25+j*1.5,-0.1])
-				if((i+j)%2 == 1) color([0.8,0.8,0.8]) cube([1.5, 1.5, 0.2] ,center=true);
-				else color([0.6,0.6,0.6]) cube([1.5, 1.5, 0.2] ,center=true);
+	for(x = [0:7]) {
+		for(y = [0:7]) {
+			translate([square_center(x),square_center(y),square_height()])
+				square_board(x,y); 
 		}
 	}
 }
