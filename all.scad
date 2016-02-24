@@ -21,8 +21,8 @@ module all() {
 }
 
 
-WHITE = [0.8,0.8,0.8];
-BLACK = [0.6,0.6,0.6];
+LIGHT = [0.8,0.8,0.8];
+DARK = [0.6,0.6,0.6];
 SQUARE_SIZE = 1.5;
 SQUARE_THICKNESS = 0.2;
 NUM_SQUARES_BY_SIDE = 8;
@@ -35,8 +35,8 @@ module square(color) {
 }
 
 module square_board(x, y) {
-    if((x+y)%2 == 1) square(WHITE); 
-	else square(BLACK);
+    if((x+y)%2 == 1) square(LIGHT); 
+	else square(DARK);
 }
 
 function left_corner() = -half(NUM_SQUARES_BY_SIDE)*SQUARE_SIZE;
