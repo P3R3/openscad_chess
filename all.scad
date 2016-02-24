@@ -13,7 +13,7 @@ function piece_position(x,y) =
  PIECE_LEVITATION
 ];
 
-module all() {
+module initial_position() {
     for(y = [0:7]) {
         translate(piece_position(1,y)) pawn();
     }    
@@ -73,10 +73,10 @@ module board() {
 }
 
 module positioning_white_pieces() {
-    color(WHITE) all();
+    color(WHITE) initial_position();
 }
 module positioning_black_pieces() {
-    mirror([1,0,0]) color(BLACK) all();    
+    mirror([1,0,0]) color(BLACK) initial_position();    
 }
 
 
