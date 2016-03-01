@@ -1,9 +1,9 @@
-include <pawn.scad>
-include <rook.scad>
-include <bishop.scad>
-include <knight.scad>
-include <queen.scad>
-include <king.scad>
+use <pawn.scad>
+use <rook.scad>
+use <bishop.scad>
+use <knight.scad>
+use <queen.scad>
+use <king.scad>
 
 PIECE_LEVITATION = 0;
 function piece_position(x,y) = 
