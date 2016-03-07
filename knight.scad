@@ -1,94 +1,153 @@
-module old_knight() {
-	$fn=5;
-	cylinder(r=0.5, h=0.25);
-	translate([0,0,0.25]) cylinder(r1=0.4,r2=0.3, h=0.5);
-	translate([0,0,0.75]) cylinder(r=0.3,h=1.5);
-	translate([0,0,2.25]) cylinder(r1=0.3,r2=0, h=0.25);
-	translate([0.2,0,1.75]) cylinder(r1=0, r2=0.3,h=0.25);
-	translate([0.2,0,2]) cylinder(r1=0.3, r2=0,h=0.25);
+NUM_SIDES=5;
 
+BASE_SIZE=0.5;
+
+BASE_HEIGHT=0.25;
+
+BOTTOM_SIDE_SIZE=0.2;
+
+MIDDLE_SIDE_SIZE=0.4;
+
+MIDDLE_SIDE_INCLINATION=-0.5;
+
+MIDDLE_SIDE_HEIGHT=1.5;
+
+TOP_SIDE_SIZE=0.5;
+
+TOP_SIDE_HEIGHT=2;
+
+NOSE_MIDDLE_SIDE_XSIZE=0.3;
+
+NOSE_MIDDLE_SIDE_YSIZE=0.2;
+
+NOSE_MIDDLE_SIDE_INCLINATION=0.5;
+
+NOSE_MIDDLE_SIDE_HEIGHT=1.25;
+
+NOSE_BOTTOM_SIDE_XSIZE=0.2;
+
+NOSE_BOTTOM_SIDE_YSIZE=0.05;
+
+NOSE_BOTTOM_SIDE_INCLINATION=-0.25;
+
+NOSE_BOTTOM_SIDE_HEIGHT=0.75;
+
+HEAD_HEIGHT=0.2;
+
+BASE_ARRAY_CORRECTION=1;
+
+CIRCLE_DEGREES=360;
+
+function next_x(x, iteration) = x*cos((CIRCLE_DEGREES/NUM_SIDES)*iteration);
+
+function next_y(y, iteration) = y*sin((CIRCLE_DEGREES/NUM_SIDES)*iteration);
+
+function next_asymmetric_point(x, y, offset, height, iteration) = 
+[
+offset + next_x(x, iteration), 
+next_y(y, iteration),  
+height
+];
+
+function next_point(x, offset, height, iteration) = 
+next_asymmetric_point(x, x, offset, height, iteration);
+
+function bottom_side_points()= [
+      next_point(BOTTOM_SIDE_SIZE, 0, 0, NUM_SIDES),
+      next_point(BOTTOM_SIDE_SIZE, 0, 0, NUM_SIDES-1),
+      next_point(BOTTOM_SIDE_SIZE, 0, 0, NUM_SIDES-2),
+      next_point(BOTTOM_SIDE_SIZE, 0, 0, NUM_SIDES-3),
+      next_point(BOTTOM_SIDE_SIZE, 0, 0, NUM_SIDES-4),    
+    ];
+
+function middle_side_points()=[
+      next_point(MIDDLE_SIDE_SIZE, MIDDLE_SIDE_INCLINATION, MIDDLE_SIDE_HEIGHT, NUM_SIDES),
+      next_point(MIDDLE_SIDE_SIZE, MIDDLE_SIDE_INCLINATION, MIDDLE_SIDE_HEIGHT, NUM_SIDES-1),
+      next_point(MIDDLE_SIDE_SIZE, MIDDLE_SIDE_INCLINATION, MIDDLE_SIDE_HEIGHT, NUM_SIDES-2),
+      next_point(MIDDLE_SIDE_SIZE, MIDDLE_SIDE_INCLINATION, MIDDLE_SIDE_HEIGHT, NUM_SIDES-3),
+      next_point(MIDDLE_SIDE_SIZE, MIDDLE_SIDE_INCLINATION, MIDDLE_SIDE_HEIGHT, NUM_SIDES-4),    
+    ];  
+
+function top_side_points()=[
+      next_point(TOP_SIDE_SIZE, 0, TOP_SIDE_HEIGHT, NUM_SIDES),
+      next_point(TOP_SIDE_SIZE, 0, TOP_SIDE_HEIGHT, NUM_SIDES-1),
+      next_point(TOP_SIDE_SIZE, 0, TOP_SIDE_HEIGHT, NUM_SIDES-2),
+      next_point(TOP_SIDE_SIZE, 0, TOP_SIDE_HEIGHT, NUM_SIDES-3),
+      next_point(TOP_SIDE_SIZE, 0, TOP_SIDE_HEIGHT, NUM_SIDES-4),      
+    ];  
+
+function nose_middle_side_points()  =[
+      next_asymmetric_point(NOSE_MIDDLE_SIDE_XSIZE,NOSE_MIDDLE_SIDE_YSIZE, NOSE_MIDDLE_SIDE_INCLINATION, NOSE_MIDDLE_SIDE_HEIGHT, NUM_SIDES),
+      next_asymmetric_point(NOSE_MIDDLE_SIDE_XSIZE,NOSE_MIDDLE_SIDE_YSIZE, NOSE_MIDDLE_SIDE_INCLINATION, NOSE_MIDDLE_SIDE_HEIGHT, NUM_SIDES-1),
+      next_asymmetric_point(NOSE_MIDDLE_SIDE_XSIZE,NOSE_MIDDLE_SIDE_YSIZE, NOSE_MIDDLE_SIDE_INCLINATION, NOSE_MIDDLE_SIDE_HEIGHT, NUM_SIDES-2),
+      next_asymmetric_point(NOSE_MIDDLE_SIDE_XSIZE,NOSE_MIDDLE_SIDE_YSIZE, NOSE_MIDDLE_SIDE_INCLINATION, NOSE_MIDDLE_SIDE_HEIGHT, NUM_SIDES-3),
+      next_asymmetric_point(NOSE_MIDDLE_SIDE_XSIZE,NOSE_MIDDLE_SIDE_YSIZE, NOSE_MIDDLE_SIDE_INCLINATION, NOSE_MIDDLE_SIDE_HEIGHT, NUM_SIDES-4),    
+    ];
+
+function nose_bottom_side_points() =[
+      next_asymmetric_point(NOSE_BOTTOM_SIDE_XSIZE, NOSE_BOTTOM_SIDE_YSIZE, NOSE_BOTTOM_SIDE_INCLINATION, NOSE_BOTTOM_SIDE_HEIGHT, NUM_SIDES),
+      next_asymmetric_point(NOSE_BOTTOM_SIDE_XSIZE, NOSE_BOTTOM_SIDE_YSIZE,NOSE_BOTTOM_SIDE_INCLINATION, NOSE_BOTTOM_SIDE_HEIGHT, NUM_SIDES-1),
+      next_asymmetric_point(NOSE_BOTTOM_SIDE_XSIZE, NOSE_BOTTOM_SIDE_YSIZE,NOSE_BOTTOM_SIDE_INCLINATION, NOSE_BOTTOM_SIDE_HEIGHT, NUM_SIDES-2),
+      next_asymmetric_point(NOSE_BOTTOM_SIDE_XSIZE, NOSE_BOTTOM_SIDE_YSIZE,NOSE_BOTTOM_SIDE_INCLINATION, NOSE_BOTTOM_SIDE_HEIGHT, NUM_SIDES-3),
+      next_asymmetric_point(NOSE_BOTTOM_SIDE_XSIZE, NOSE_BOTTOM_SIDE_YSIZE,NOSE_BOTTOM_SIDE_INCLINATION, NOSE_BOTTOM_SIDE_HEIGHT, NUM_SIDES-4),    
+    ]; 
+
+module base() {
+	cylinder(r=BASE_SIZE, h=BASE_HEIGHT);    
 }
 
-module knight() {
-	$fn=5;
-	cylinder(r=0.5, h=0.25);
-	
-	r5 = 0.05;
-	r1 = 0.2;
-	r2 = 0.4;
-	r3 = 0.5;
-	r4 = 0.3;
-	h1 = 1.5;
-	h2 = 2;
-	h3 = 1.25;
-	h4 = 0.75;
-	p = [
-		[r1*cos(0),r1*sin(0),0],
-		[r1*cos(72),r1*sin(72),0],
-		[r1*cos(144),r1*sin(144),0],
-		[r1*cos(216),r1*sin(216),0],
-		[r1*cos(288),r1*sin(288),0],
-	
-		[r2*cos(0)-0.5,r2*sin(0),h1],
-		[r2*cos(72)-0.5,r2*sin(72),h1],
-		[r2*cos(144)-0.5,r2*sin(144),h1],
-		[r2*cos(216)-0.5,r2*sin(216),h1],
-		[r2*cos(288)-0.5,r2*sin(288),h1],
-
-		[r3*cos(0),r3*sin(0),h2],
-		[r3*cos(72),r3*sin(72),h2],
-		[r3*cos(144),r3*sin(144),h2],
-		[r3*cos(216),r3*sin(216),h2],
-		[r3*cos(288),r3*sin(288),h2],
-
-		[r4*cos(0)+0.5,r1*sin(0),h3],
-		[r4*cos(72)+0.5,r1*sin(72),h3],
-		[r4*cos(144)+0.5,r1*sin(144),h3],
-		[r4*cos(216)+0.5,r1*sin(216),h3],
-		[r4*cos(288)+0.5,r1*sin(288),h3],
-		
-		[r1*cos(0)-0.25,r5*sin(0),h4],
-		[r1*cos(72)-0.25,r5*sin(72),h4],
-		[r1*cos(144)-0.25,r5*sin(144),h4],
-		[r1*cos(216)-0.25,r5*sin(216),h4],
-		[r1*cos(288)-0.25,r5*sin(288),h4]];
-
-	f1 = [
+module walls(faces_points) {
+    
+        wall_sides=[
 		[0,1,2,3,4],
-		//[5,6,7,8,9],
 		[10,14,13,12,11],
-		//[15,16,17,18,19],
-		//[20,24,23,22,21],
 		[0,5,6,1],
 		[1,6,7,2],
 		[2,7,8,3],
 		[3,8,9,4],
 		[4,9,5,0],
-
 		[5,10,11,6],
 		[6,11,12,7],
 		[7,12,13,8],
 		[8,13,14,9],
 		[9,14,10,5]];
-
-	f2 = [
-		[10,14,13,12,11],
-		[20,21,22,23,24],
-
-		[10,11,16,15],
-		[11,12,17,16],
-		[12,13,18,17],
-		[13,14,19,18],
-		[14,10,15,19],
-
-		[15,16,21,20],
-		[16,17,22,21],
-		[17,18,23,22],
-		[18,19,24,23],
-		[19,15,20,24]];
-
-	translate([0,0,0.25]) polyhedron(points=p, faces=f1);
-	translate([0,0,0.25]) polyhedron(points=p, faces=f2);
-	translate([0,0,2.25])cylinder(r1=0.5,r2=0, h=0.2);
-
+	
+        polyhedron(points=faces_points, faces=wall_sides);
 }
+
+module body() {
+    body_sides_points=concat(bottom_side_points(), middle_side_points(), top_side_points());
+    
+    translate([0,0,BASE_HEIGHT]) 
+        walls(body_sides_points);    
+}
+
+module nose() {
+    nose_sides_points=concat(top_side_points() , nose_middle_side_points(), nose_bottom_side_points()  );
+    
+    translate([0,0,BASE_HEIGHT])
+        walls(nose_sides_points);    
+}
+
+module head() {
+	translate([0,0,TOP_SIDE_HEIGHT+BASE_HEIGHT])
+        cylinder(r1=TOP_SIDE_SIZE,r2=0, h=HEAD_HEIGHT);      
+}
+
+module knight() {
+	$fn=NUM_SIDES;
+    
+	base();
+
+    body();
+    
+    nose();
+ 
+    head();
+}
+
+
+ 
+
+
+
